@@ -102,19 +102,28 @@ module EventsHelper
   end
 
   def social_link(event)
-    new_label =""
-    new_label = new_event_label + " " if event.new?
+    link_text = capture do
+      concat new_event_label if event.new?
+      concat event_title(event)
+      concat " - "
+      concat event_location(event)
+    end
 
-    event_title = event.title
+    link_to_unless event.url.nil?, link_text, event.url, { id: event.id }
+  end
+
+  def event_location(event)
+    content_tag( :span, "#{event.venue_name} in #{event.venue_area}", :class => "info")
+  end
+
+  def event_title(event)
     #Highlight socials which are monthly or more infrequent:
-    event_title =  content_tag( :span, event.title, :class => "social_highlight") if event.less_frequent?
+    return highlighted_event_title(event) if event.less_frequent?
+    event.title
+  end
 
-    event_location = content_tag( :span, "#{event.venue_name} in #{event.venue_area}", :class => "info")
-
-    #display = new_label + "#{event_title} - #{event_location}"
-    display = raw(new_label + event_title + " - " + event_location)
-
-    link_to_unless event.url.nil?, display, event.url, { id: event.id }
+  def highlighted_event_title(event)
+    content_tag( :span, event.title, :class => "social_highlight")
   end
 
   def mapinfo_social_listing(social, cancelled, date=nil)
