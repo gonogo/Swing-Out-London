@@ -102,14 +102,12 @@ module EventsHelper
   end
 
   def social_link(event)
-    link_text = capture do
+    link_to event.url, { id: event.id } do
       concat new_event_label if event.new?
       concat event_title(event)
       concat " - "
       concat event_location(event)
     end
-
-    link_to_unless event.url.nil?, link_text, event.url, { id: event.id }
   end
 
   def event_location(event)
@@ -117,7 +115,6 @@ module EventsHelper
   end
 
   def event_title(event)
-    #Highlight socials which are monthly or more infrequent:
     return highlighted_event_title(event) if event.less_frequent?
     event.title
   end
@@ -125,6 +122,7 @@ module EventsHelper
   def highlighted_event_title(event)
     content_tag( :span, event.title, :class => "social_highlight")
   end
+
 
   def mapinfo_social_listing(social, cancelled, date=nil)
     if social.title.nil? || social.title.empty?
