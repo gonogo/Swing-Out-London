@@ -16,6 +16,7 @@ gem "twitter", "~> 5.15"
 
 gem "geocoder", "~> 1.2"
 gem "gmaps4rails", "2.0.0.pre"
+gem "select2-rails", "< 4"
 
 gem "strong_parameters"
 
